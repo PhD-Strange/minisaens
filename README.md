@@ -1,0 +1,1 @@
+This repository was created for the 4th semester course "Computer Science Problem Solving Technologies" This repository was created for work on the course "Computer Technologies for Solving Scientific Problems" in the 4th semester at MIPT..
