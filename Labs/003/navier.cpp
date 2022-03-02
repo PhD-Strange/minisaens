@@ -65,7 +65,7 @@ public:
 
   // Evaluate pressure at inflow
   void eval(Array<double>& values, const Array<double>& x) const
-  { values[0] = 2 * cos(5.0 * t); }
+  { values[0] = 2 * cos(5.0 * t) - sin(2.0 * t); } // first p = 2 * cos(5.0 * t) 
 
   // Current time
   double t;
