@@ -2,7 +2,9 @@
 #define MAINMENUSTATE_H
 
 #include "GameState.h"
-#include "Button.h"
+#include "EditorState.h"
+#include "SettingsState.h"
+#include "Gui.h"
 
 class MainMenuState : public State {
 private:
@@ -11,7 +13,7 @@ private:
     RectangleShape background;
     Font font;
 
-    std::map<std::string, Button*> buttons;
+    std::map<std::string, gui::Button*> buttons;
 
     // Functions
     void initVariables();
@@ -21,7 +23,7 @@ private:
     void initButtons();
     
 public:
-    MainMenuState(RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states);
+    MainMenuState(StateData* state_data);
     virtual ~MainMenuState();
 
     // Functions
@@ -29,7 +31,7 @@ public:
     void updateInput(const float& dt);
     void updateButtons();
     void update(const float& dt);
-    void renderButtons(RenderTarget* target = nullptr);
+    void renderButtons(RenderTarget& target);
     void render(RenderTarget* target = nullptr);
 };
 

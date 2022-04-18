@@ -1,8 +1,13 @@
+#include "stdafx.h"
 #include "MainMenuState.h"
 
 //Initializer
 
 void MainMenuState::initVariables() {
+    
+}
+
+void MainMenuState::initBackground() {
     this->background.setSize(
         Vector2f(static_cast<float>(this->window->getSize().x), 
         static_cast<float>(this->window->getSize().y))
@@ -14,13 +19,9 @@ void MainMenuState::initVariables() {
     this->background.setTexture(&this->backgroundTexture);
 }
 
-void MainMenuState::initBackground() {
-
-}
-
 void MainMenuState::initFonts() {
-    if (!this->font.loadFromFile("Fonts/bukyvedelight.ttf")) {
-        throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT bukyvedelight.ttf");
+    if (!this->font.loadFromFile("Fonts/CyrilicOld.TTF")) {
+        throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
     }
 }
 
@@ -39,22 +40,25 @@ void MainMenuState::initKeybinds() {
 }
 
 void MainMenuState::initButtons() {
-    this->buttons["GAME_STATE"] = new Button(840, 480, 250, 50, &this->font, "New Game", 35, 
+    this->buttons["GAME_NAME"] = new gui::Button(800, 340, 300, 80, &this->font, "Game of Life", 70, 
+    Color(250, 0, 0, 250), Color(250, 0, 0, 250), Color(250, 0, 0, 250),
+    Color(250, 0, 0, 0), Color(250, 0, 0, 0), Color(250, 0, 0, 0));
+    this->buttons["GAME_STATE"] = new gui::Button(840, 480, 250, 65, &this->font, "New Game", 50, 
     Color(150, 150, 150, 100), Color(250, 250, 250, 250), Color(20, 20, 20, 20),
     Color(150, 150, 150, 0), Color(150, 150, 150, 0), Color(20, 20, 20, 0));
-    this->buttons["SETTINGS"] = new Button(840, 580, 250, 50, &this->font, "Settings", 35, 
+    this->buttons["SETTINGS_STATE"] = new gui::Button(840, 580, 250, 65, &this->font, "Settings", 50, 
     Color(150, 150, 150, 100), Color(250, 250, 250, 250), Color(20, 20, 20, 20),
     Color(150, 150, 150, 0), Color(250, 250, 250, 0), Color(20, 20, 20, 0));
-    this->buttons["EDITOR_STATE"] = new Button(840, 680, 250, 50, &this->font, "Editor", 35, 
+    this->buttons["EDITOR_STATE"] = new gui::Button(840, 680, 250, 65, &this->font, "Editor", 50, 
     Color(150, 150, 150, 100), Color(250, 250, 250, 250), Color(20, 20, 20, 20),
     Color(150, 150, 150, 0), Color(250, 250, 250, 0), Color(20, 20, 20, 0));
 
-    this->buttons["EXIT_STATE"] = new Button(840, 880, 250, 50, &this->font,
-    "Quit", 35, Color(100, 100, 100, 100), Color(250, 250, 250, 250), Color(20, 20, 20, 20), 
+    this->buttons["EXIT_STATE"] = new gui::Button(840, 880, 250, 65, &this->font,
+    "Quit", 50, Color(100, 100, 100, 100), Color(250, 250, 250, 250), Color(20, 20, 20, 20), 
     Color(150, 150, 150, 0), Color(250, 250, 250, 0), Color(20, 20, 20, 0));
 }
 
-MainMenuState::MainMenuState(RenderWindow* window, std::map<std::string, int>* supportedKeys, std::stack<State*>* states) : State(window, supportedKeys, states) {
+MainMenuState::MainMenuState(StateData* state_data) : State(state_data) {
     this->initVariables();
     this->initBackground();
     this->initFonts();
@@ -75,12 +79,21 @@ void MainMenuState::updateInput(const float& dt) {
 
 void MainMenuState::updateButtons() {
     for (auto &it : this->buttons) {
-        it.second->update(this->mousePosView);
+        it.second->update(this->mousePosWindow);
     }
 
-    //Quit the game
+    //Start the game
     if (this->buttons["GAME_STATE"]->isPressed()) {
-        this->states->push(new GameState(this->window, this->supportedKeys, this->states));
+        this->states->push(new GameState(this->stateData));
+    }
+    // Settings
+    if (this->buttons["SETTINGS_STATE"]->isPressed()) {
+        this->states->push(new SettingsState(this->stateData));
+    }
+
+    // Editor
+    if (this->buttons["EDITOR_STATE"]->isPressed()) {
+        this->states->push(new EditorState(this->stateData));
     }
 
     //Quit the game
@@ -96,7 +109,7 @@ void MainMenuState::update(const float& dt) {
     this->updateButtons();
 }
 
-void MainMenuState::renderButtons(RenderTarget* target) {
+void MainMenuState::renderButtons(RenderTarget& target) {
     for (auto &it : this->buttons) {
         it.second->render(target);
     }
@@ -108,7 +121,7 @@ void MainMenuState::render(RenderTarget* target) {
 
 
     target->draw(this->background);
-    this->renderButtons(target);
+    this->renderButtons(*target);
 
     /* // REMOVE laters
     Text mouseText;

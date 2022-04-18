@@ -3,17 +3,13 @@
 
 #include "MainMenuState.h"
 
-using namespace sf;
-
 class Game {
 private:
     // Variables
-
+    GraphicsSettings gfxSettings;
+    StateData stateData;
     RenderWindow *window;
     Event sfEvent;
-    std::vector<VideoMode> videoModes;
-    ContextSettings windowSettings;
-    bool fullscreen;
 
     Clock dtClock;
     float dt;
@@ -22,12 +18,16 @@ private:
 
     std::map<std::string, int> supportedKeys;
 
+    float gridSize;
+
     // Initializer
 
     void initVariables();
+    void initGraphicsSettings();
     void initWindow();
-    void initStates();
     void initKeys();
+    void initStateData();
+    void initStates();
 
 public:
     // Constructors/Destructors

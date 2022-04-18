@@ -6,6 +6,7 @@
 class Player : public Entity {
 private:
     //Variables
+    bool attacking;
 
     //Initializer
     void initVariables();
@@ -17,7 +18,11 @@ public:
     virtual ~Player();
 
     // Functions
-    virtual void update(const float& dt);
+    void updateAttack();
+    void updateAnimation(const float& dt);
+    void update(const float& dt);
+
+    void render(RenderTarget& target);
 };
 
 
